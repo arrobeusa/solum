@@ -1,6 +1,6 @@
 <?php
 
-namespace LS\MirageBundle\DependencyInjection;
+namespace LinkShare\Bundle\SolumBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

@@ -15,14 +15,14 @@
     self.onLeaf = function($li, level) {
       var $a = $li.find('a');
       var target = $a.attr('data-solum-target-file');
-      var url    = self.ajaxManager.generateURL('solum_test_jslint_review_file', {});
+      var url    = self.ajaxManager.generateURL('linkshare_solum_test_jslint_review_file', {});
       url = url + '?target=' + encodeURI(target);
       $a.attr('href', url);
     }
 
     self.getFileList = function() {
       self.ajaxManager.request(
-        'solum_test_jslint_files',
+        'linkshare_solum_test_jslint_files',
         {},
         function(data) {
           self.filetree.addItems(data);

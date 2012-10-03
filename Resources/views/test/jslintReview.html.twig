@@ -1,27 +1,27 @@
-{% extends 'SolumBundle::layout.html.twig' %}
+{% extends 'LinkShareSolumBundle::layout.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
-  <script type="text/javascript" src="{{ asset('bundles/solum/js/test/assets/routes.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('bundles/solum/js/test/models/jslintReview.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('bundles/solum/js/solum/lib/ko-binding-folderTree.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/test/assets/routes.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/test/models/jslintReview.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/solum/lib/ko-binding-folderTree.js') }}"></script>
 
   {# Syntax Highlighter Files #}
-  <script type="text/javascript" src="{{ asset('bundles/solum/js/vendor/SyntaxHighlighter/scripts/XRegExp.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('bundles/solum/js/vendor/SyntaxHighlighter/scripts/shCore.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('bundles/solum/js/vendor/SyntaxHighlighter/scripts/shBrushJScript.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/vendor/SyntaxHighlighter/scripts/XRegExp.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/vendor/SyntaxHighlighter/scripts/shCore.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/vendor/SyntaxHighlighter/scripts/shBrushJScript.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
   {{ parent() }}
-  <link rel="stylesheet" href="{{ asset('bundles/solum/css/vendor/SyntaxHighlighter/styles/shCore.css') }}" />
-  <link rel="stylesheet" href="{{ asset('bundles/solum/css/vendor/SyntaxHighlighter/styles/shThemeEclipse.css') }}" />
-  <link rel="stylesheet" href="{{ asset('bundles/solum/css/main.css') }}" />
+  <link rel="stylesheet" href="{{ asset('bundles/linksharesolum/css/vendor/SyntaxHighlighter/styles/shCore.css') }}" />
+  <link rel="stylesheet" href="{{ asset('bundles/linksharesolum/css/vendor/SyntaxHighlighter/styles/shThemeEclipse.css') }}" />
+  <link rel="stylesheet" href="{{ asset('bundles/linksharesolum/css/main.css') }}" />
 {% endblock %}
 
 {% block pagetitle %}
   <div class="row">
-    <h1><a href="{{ path('solum_test_jslint_select_file') }}">JS Lint Code Quality Checker</a></h1>
+    <h1><a href="{{ path('linkshare_solum_test_jslint_select_file') }}">JS Lint Code Quality Checker</a></h1>
   </div>
 {% endblock %}
 

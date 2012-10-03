@@ -15,7 +15,7 @@
     self.lintReviewFile = function(target) {
       self.jslintOutput.empty();
       self.ajaxManager.request(
-        'solum_test_jslint_run',
+        'linkshare_solum_test_jslint_run',
         {data: {target: self.target}},
         function(data) {
           self.jslintOutput.addItems(data[1]);

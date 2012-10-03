@@ -398,13 +398,16 @@ solum.models.tables = (function(root){
             current[s] = list[i];
           }
           // Make a new folder
-          else if(typeof current[s] !== 'object') {
+          else if(typeof current[s] !== 'object' && s !== '') {
             current[s] = {};
             current = current[s];
           }
           // Folder exists
-          else {
+          else if(s !== '') {
             current = current[s];
+          }
+          else {
+            // Ignore empty strings that occur when paths start with '/'
           }
         }
       }

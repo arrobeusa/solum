@@ -1,6 +1,6 @@
 <?php
 
-namespace LS\SolumBundle\Controller;
+namespace LinkShare\Bundle\SolumBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,7 @@ class TestController extends Controller
      */
     public function unitTestAction()
     {
-    
+
     }
 
     /**
@@ -38,7 +38,13 @@ class TestController extends Controller
      */
     public function jsLintSelectFileAction()
     {
-        return $this->render('SolumBundle:test:jslintSelectFile.html.twig');
+        return $this->render('LinkShareSolumBundle:test:jslintSelectFile.html.twig');
+    }
+
+    private function getProjectRoot()
+    {
+        $root =  $this->get('kernel')->getRootDir(); // the 'app' dir
+        return str_replace('/app', '', $root);
     }
 
     /**
@@ -47,7 +53,7 @@ class TestController extends Controller
      */
     public function jsLintReviewFileAction(Request $request)
     {
-        $root = $this->get('kernel')->getRootDir(); // this is the 'app' directory
+        $projectRoot = $this->getProjectRoot();
         $target = $request->get('target', false);
 
         // Return nothing if the target was not sent
@@ -55,10 +61,10 @@ class TestController extends Controller
             $data = "Target not specified.";
         }
         else {
-            $data = file_get_contents($root . '/../src/LS/' . $target);
+            $data = file_get_contents($projectRoot . $target);
         }
 
-        return $this->render('SolumBundle:test:jslintReview.html.twig', array(
+        return $this->render('LinkShareSolumBundle:test:jslintReview.html.twig', array(
             'file_content' => $data,
             'target'       => $target
         ));
@@ -73,18 +79,18 @@ class TestController extends Controller
      */
     public function jsLintFilesAction()
     {
-        $root = $this->get('kernel')->getRootDir(); // this is the 'app' directory
+        $projectRoot = $this->getProjectRoot();
 
         // Find all the javascript files in the LS dir
         $jsFileFinder = new Finder();
-        $jsFileFinder->files()->in($root . '/../src/LS/')->name('*.js');
+        $jsFileFinder
+            ->files()
+            ->in($projectRoot . '/src/')
+            ->in($projectRoot . '/vendor/bundles/LinkShare/')
+            ->name('*.js');
 
-        $files = array();
         foreach($jsFileFinder as $file) {
-            // strip out everything before /LS/
-            $removePath = '/LS/';
-            $pos        = strpos($file->getRealpath(), $removePath);
-            $relpath    = substr($file->getRealpath(), $pos + strlen($removePath));
+            $relpath = str_replace($projectRoot, '', $file->getRealpath());
 
             $files[] = $relpath;
         }
@@ -102,7 +108,7 @@ class TestController extends Controller
      */
     public function jsLintRunAction(Request $request)
     {
-        $root = $this->get('kernel')->getRootDir(); // this is the 'app' directory
+        $projectRoot = $this->getProjectRoot();
         $target = $request->get('target', false);
 
         // Return nothing if the target was not sent
@@ -110,7 +116,7 @@ class TestController extends Controller
             return new Response('{}');
         }
 
-        $target = $root . '/../src/LS/' . $target;
+        $target = $projectRoot . $target;
         $output = `jslint $target --indent=2 --terse --json --maxerr=100`;
 
         $r = new Response($output);
