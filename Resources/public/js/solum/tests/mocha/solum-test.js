@@ -1,6 +1,6 @@
 var should = require('should');
 
-var lib = '../../../'
+var lib = '../../'
 if(typeof process == "object" && typeof process.env == "object" && process.env['MOCHA_USE_COVERAGE_LIB'] == 1) {
   lib += 'lib-cov';
 }
@@ -9,11 +9,11 @@ else {
 }
 
 // Let the user know the library being used
-console.log("\033[33m  The JS library being used is: " + lib);
+console.log("\033[33m  The JS library being used is: " + lib + "\033[0m");
 
-// Mocks to include  
-var ko = require('../../mocks/mock-ko.js');
-var $  = require('../../mocks/mock-jquery.js');
+// Mocks to include
+var ko = require('../mocks/mock-ko.js');
+var $  = require('../mocks/mock-jquery.js');
 
 // Solum libraries to include
 solum = require(lib + '/models/tables.js');

@@ -9,7 +9,10 @@ else {
 }
 
 // Let the user know the library being used
-console.log("\033[33m  The JS library being used is: " + lib + '\033[0m');
+// Let the user know the library being used
+describe('The library being used for test', function() {
+  it('is: ' + lib, function(){});
+});
 
 // Mocks to include
 var ko = require('../../mocks/mock-ko.js');

@@ -9,7 +9,10 @@ else {
 }
 
 // Let the user know the library being used
-console.log("\033[33m  The JS library being used is: " + lib);
+// Let the user know the library being used
+describe('The library being used for test', function() {
+  it('is: ' + lib, function(){});
+});
 
 // Mocks to include
 var ko = require('../../mocks/mock-ko.js');
@@ -30,8 +33,9 @@ var itemList =
   {id: 6, hello:6, jello:6}
 ];
 
-describe('solum:tables:paginatedTable',function() {
-  describe('Constructing a paginatedTable with the solum.getModel method', function() {
+describe('solum:tables:groupedList',function() {
+  it('Is still pending');
+  /*describe('Constructing a paginatedTable with the solum.getModel method', function() {
     it('Should not require any arguments',function() {
       var table = solum.getModel('tables', 'paginatedTable');
       table.list().should.have.length(0)
@@ -127,5 +131,5 @@ describe('solum:tables:paginatedTable',function() {
       table.removeItems('marcus', 2);
       table.list().length.should.eql(itemList.length);
     })
-  })
+  })*/
 })
