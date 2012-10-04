@@ -15,6 +15,40 @@ use Symfony\Component\Finder\Finder;
  */
 class TestController extends Controller
 {
+    public function selectSuiteForUnitTestAction(Request $request)
+    {
+        return $this->render('LinkShareSolumBundle:test:mochaSelectSuite.html.twig');
+    }
+
+    /**
+     * Similiar to the select files action for jslint, but it looks for js folders
+     * with suiteDefinition, runSuite, runSuiteCoverage js files for it to work.
+     */
+    public function getMochaSuitesAction(Request $request)
+    {
+        $projectRoot = $this->getProjectRoot();
+        $exclude = $request->get('exlude', array());
+
+        // Find all the javascript files in the LS dir
+        $jsFileFinder = new Finder();
+        $jsFileFinder
+            ->files()
+            ->in($projectRoot . '/web/coverage/')
+            ->name('*.html');
+
+        $files = array();
+        foreach($jsFileFinder as $file) {
+            $relpath = str_replace($projectRoot, '', $file->getRealpath());
+
+            $files[] = $relpath;
+        }
+
+        $json = json_encode($files);
+        $r = new Response($json);
+        $r->headers->set('content-type', 'application/json');
+        return $r;
+    }
+
     /**
      * Loads all the files necessary to run mocha in the browser
      */
@@ -27,9 +61,18 @@ class TestController extends Controller
      * Runs the JSCoverage task to create the instrumented JS files and then generates
      * the HTML page in the temp directory and serves it up in the response
      */
-    public function unitTestCoverageAction()
+    public function unitTestCoverageAction(Request $request)
     {
+        $projectRoot = $this->getProjectRoot();
+        $target = $request->get('target', false);
 
+        // Redirect if nothing was sent
+        if(!$target || !is_file($projectRoot . $target)) {
+            return $this->redirect('linkshare_solum_test_mocha_select_suite');
+        }
+
+        $content = file_get_contents($projectRoot . $target);
+        return new Response($content);
     }
 
     /**
@@ -89,6 +132,7 @@ class TestController extends Controller
             ->in($projectRoot . '/vendor/bundles/LinkShare/')
             ->name('*.js');
 
+        $files = array();
         foreach($jsFileFinder as $file) {
             $relpath = str_replace($projectRoot, '', $file->getRealpath());
 

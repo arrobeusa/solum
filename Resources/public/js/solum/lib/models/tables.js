@@ -13,7 +13,7 @@
 // Check if we are in a node.js environment for unit testing
 if(typeof require == 'function') {
   solum = require('../solum.js');
-  ko    = require('../../tests/mocks/mock-ko.js');
+  ko    = require('../../tests/mocha/mocks/mock-ko.js');
 }
 
 // The tables object is a module which abstracts the solum keyword
@@ -394,7 +394,7 @@ solum.models.tables = (function(root){
           var s = filepath[j];
           // This is a leaf node (terminal node) and the value should be the full
           // file path
-          if (s.indexOf('.js') !== -1) {
+          if (j == (filepath.length -1)) {
             current[s] = list[i];
           }
           // Make a new folder
