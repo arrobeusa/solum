@@ -31,6 +31,11 @@
   </div>
   <div class="row">
     <div><h3>Pick a Coverage Report to View</h3></div>
+    <div id="loading_symbol" style="display: none" data-bind="visible: ajaxManager.isLoading()">
+      <div class="centered" style="width:50px; margin:0px auto;">
+        <img height="50px" width="50px" src="{{ asset('bundles/linksharesolum/images/demo/loading.gif') }}"/>
+      </div>
+    </div>
     <div data-bind="folderTree: {data: filetree.hierarchy, onLeaf: onLeaf}"></div>
   </div>
 
