@@ -18,5 +18,23 @@ solum.addAjaxRoutes({
     url: "solum/test/jslint/review/",
     method: "GET",
     params: []
+  },
+  linkshare_solum_test_mocha_select_suite: {
+    name: "linkshare_solum_test_mocha_select_suite",
+    url: "solum/test/mocha/",
+    method: "GET",
+    params: []
+  },
+  linkshare_solum_test_mocha_get_suites: {
+    name: "linkshare_solum_test_mocha_get_suites",
+    url: "solum/test/mocha/suites/",
+    method: "GET",
+    params: []
+  },
+  linkshare_solum_test_mocha_run_coverage: {
+    name: "linkshare_solum_test_mocha_run_coverage",
+    url: "solum/test/mocha/coverage/",
+    method: "GET",
+    params: []
   }
 });

@@ -12,8 +12,8 @@
 
 // Setup mock dependencies if we are in a node.js unit test environment
 if(typeof require == 'function') {
-  ko = require('../tests/mocks/mock-ko.js');
-  $  = require('../tests/mocks/mock-jquery.js');
+  ko = require('../tests/mocha/mocks/mock-ko.js');
+  $  = require('../tests/mocha/mocks/mock-jquery.js');
   localStorage   = {};
   sessionStorage = {};
 }
