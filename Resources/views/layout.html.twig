@@ -7,16 +7,17 @@
       <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/vendor/json.js') }}"></script>
       <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/vendor/jquery.js') }}"></script>
       <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/vendor/knockout.js') }}"></script>
-      <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/lib/vendor/date.js') }}"></script>
+      {#<script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/lib/vendor/date.js') }}"></script>#}
 
       {# Twitter Bootstrap JS Files #}
       <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/vendor/bootstrap.min.js') }}"></script>
 
       {# Solum Libraries #}
       <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/solum/lib/solum.js') }}"></script>
+      <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/solum/lib/services/ajax.js') }}"></script>
       <script type="text/javascript" src="{{ asset('bundles/linksharesolum/js/solum/lib/models/tables.js') }}"></script>
       <script type="text/javascript">
-        solum.configureService('ajax', {prefix: '{{ app.request.getScheme() }}://{{ app.request.getHost() }}{{ app.request.getBasePath() }}/'});
+        solum.configureService('ajax', 'manager', {prefix: '{{ app.request.getScheme() }}://{{ app.request.getHost() }}{{ app.request.getBasePath() }}/'});
       </script>
     {% endblock %}
 

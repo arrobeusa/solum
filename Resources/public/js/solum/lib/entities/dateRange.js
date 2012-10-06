@@ -1,3 +1,4 @@
+/*global solum:true, $:true, ko:true, module:true */
 /*
  * solum - date range entity
  * author: brandon eum
@@ -5,27 +6,28 @@
  */
 
 // Modularize so we can abstract the use of "solum" to root just in case we change the name
-(function(root){
-
+(function (root) {
+  "use strict";
 
   /**
    * Represents a start and end date with validation
    */
-  root.entities.dateRange = function() {
+  root.entities.dateRange = function () {
+    var self, today, threeYearsAgo, localization, checkFormat, startConstraints;
     // Properties
     this.start = ko.observable('');
     this.end   = ko.observable('');
 
     // Constraints
-    var self          = this;
-    var today         = Date.today();
-    var threeYearsAgo = Date.today().add({years: -3});
+    self          = this;
+    today         = Date.today();
+    threeYearsAgo = Date.today().add({years: -3});
 
-    var localization =  root.config.dateAndNumberFormatLocalization;
-    var checkFormat = localization[root.config.locale]
+    localization =  root.config.dateAndNumberFormatLocalization;
+    checkFormat = localization[root.config.locale];
 
     // TODO: Check if the message translations are relevant
-    var startConstraints = [
+    startConstraints = [
       {
         constraint: 'notNull',
         msgTranslations: {
@@ -48,27 +50,39 @@
         }
       },
       {
-        constraint: function(s, checkFormat) {
-          var delim  = checkFormat.delim;
-          var map    = checkFormat.map;
+        constraint: function (s, checkFormat) {
+          var
+            delim,
+            map,
+            vals,
+            year,
+            month,
+            day,
+            start,
+            end;
+
+          delim  = checkFormat.delim;
+          map    = checkFormat.map;
 
           // Avoid situations where one of the dates is not initialized
-          if(self.start() == null || self.end() == null) return;
+          if (self.start() !== null || self.end() !== null) {
+            // Y/M/d value validation
+            vals  = self.start().split(delim);
+            year  = Number(vals[map.year]);
+            month = Number(vals[map.month]);
+            day   = Number(vals[map.day]);
+            start = new Date(year, month, day);
 
-          // Y/M/d value validation
-          var vals  = self.start().split(delim);
-          var year  = Number(vals[map.year]);
-          var month = Number(vals[map.month]);
-          var day   = Number(vals[map.day]);
-          var start = new Date(year, month, day);
+            vals    = self.end().split(delim);
+            year    = Number(vals[map.year]);
+            month   = Number(vals[map.month]);
+            day     = Number(vals[map.day]);
+            end = new Date(year, month, day);
 
-          vals    = self.end().split(delim);
-          year    = Number(vals[map.year]);
-          month   = Number(vals[map.month]);
-          day     = Number(vals[map.day]);
-          var end = new Date(year, month, day);
-
-          if(start > end) throw {error: "errors.form.date.start_greater_than_end"};
+            if (start > end) {
+              throw {error: "errors.form.date.start_greater_than_end"};
+            }
+          }
 
           return true;
         },
@@ -77,15 +91,15 @@
     ];
 
     this.constraints = {
-        start: startConstraints,
-        end:   [
-          {constraint: 'notNull'},
-          {constraint: 'date', params: {localization: checkFormat}},
-          {constraint: 'minDate', params: {minDate: threeYearsAgo}},
-          {constraint: 'maxDate', params: {maxDate: today}}
-        ]
+      start: startConstraints,
+      end:   [
+        {constraint: 'notNull'},
+        {constraint: 'date', params: {localization: checkFormat}},
+        {constraint: 'minDate', params: {minDate: threeYearsAgo}},
+        {constraint: 'maxDate', params: {maxDate: today}}
+      ]
     };
 
     root.constructEntity(this);
   };
-})(solum);
+}(solum));

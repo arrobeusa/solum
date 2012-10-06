@@ -60,13 +60,13 @@ class RunMochaJSCoverageReportCommand extends ContainerAwareCommand
         if(is_dir($tmpDir) == false) {
             $output->writeln("\n<comment>  ></comment><info>  Creating temp directory for running coverage: </info>" . $tmpDir);
             $result   = array();
-            exec("mkdir {$tmpDir}", $result, $status);
+            exec("mkdir {$tmpDir} 2>&1", $result, $status);
             $this->checkError($output, $status, $result, "      <error>Could not create the temp directory {$tmpDir}, received errors:</error>");
         }
         else {
             $output->writeln("\n<comment>  ></comment><info>  Cleaning the temp directory: </info>" . $tmpDir);
             $result   = array();
-            $lastLine = exec("rm -rf {$tmpDir}* 2&>1", $result, $status);
+            $lastLine = exec("rm -rf {$tmpDir}* 2>&1", $result, $status);
             $this->checkError($output, $status, $result, '      <error>There was a problem clearing the temp dir, received errors:</error>');
         }
 
@@ -173,7 +173,7 @@ class RunMochaJSCoverageReportCommand extends ContainerAwareCommand
 
         $output->writeln('<comment>  ></comment><info>  Removing the copy in the temp directory</info>');
         $result   = array();
-        $lastLine = exec("rm -rf {$suite} 2&>1", $result, $status);
+        $lastLine = exec("rm -rf {$suite} 2>&1", $result, $status);
         $this->checkError($output, $status, $result, '      <error>There was a problem running deleting the temp directory, received errors:</error>');
     }
 

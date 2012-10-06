@@ -5,7 +5,7 @@
   root.models.jslint.selectFile = function() {
     var self = this;
 
-    self.ajaxManager = root.getService('ajax');
+    self.ajaxManager = root.getService('ajax', 'manager');
 
     // Create a folder structure representation of the files
     self.filetree     = root.getModel('tables', 'tree');

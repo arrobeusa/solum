@@ -5,7 +5,10 @@
   root.models.jslint.review = function() {
     var self = this;
 
-    self.ajaxManager = root.getService('ajax');
+    self.ajaxManager = root.getService('ajax', 'manager');
+
+    self.isTestDone = ko.observable(false);
+
     self.target = "";
 
     // For storing the result output
@@ -19,6 +22,7 @@
         {data: {target: self.target}},
         function(data) {
           self.jslintOutput.addItems(data[1]);
+          self.isTestDone(true);
         }
       );
     }
@@ -38,6 +42,6 @@
         $('.jslint-output-table').toggle();
     }
   }
-})(solum)
+}(solum))
 
 

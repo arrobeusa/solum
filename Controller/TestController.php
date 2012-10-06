@@ -161,7 +161,7 @@ class TestController extends Controller
         }
 
         $target = $projectRoot . $target;
-        $output = `jslint $target --indent=2 --terse --json --maxerr=100`;
+        $output = `jslint $target --indent=2 --terse --json --forin --maxerr=100`;
 
         $r = new Response($output);
         $r->headers->set('content-type', 'application/json');

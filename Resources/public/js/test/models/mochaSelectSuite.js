@@ -5,7 +5,7 @@
   root.models.mocha.selectSuite = function() {
     var self = this;
 
-    self.ajaxManager = root.getService('ajax');
+    self.ajaxManager = root.getService('ajax', 'manager');
     self.actionType = ko.observable('');
 
     // Create a folder structure representation of the files
