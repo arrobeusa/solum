@@ -18,7 +18,7 @@
       var url    = self.ajaxManager.generateURL('linkshare_solum_test_jslint_review_file', {});
       url = url + '?target=' + encodeURI(target);
       $a.attr('href', url);
-    }
+    };
 
     self.getFileList = function() {
       self.ajaxManager.request(
@@ -28,7 +28,15 @@
           self.filetree.addItems(data);
         }
       );
-    }
+    };
+
+    self.showAll = function () {
+      $('.solum-tree-node, .solum-node').show();
+    };
+
+    self.hideAll = function () {
+      $('.solum-tree-node.level1').hide();
+    };
   }
 })(solum)
 
