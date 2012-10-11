@@ -12,7 +12,7 @@
     self.target = "";
 
     // For storing the result output
-    self.jslintOutput = root.getModel('tables', 'paginatedTable');
+    self.jslintOutput = root.getComponent('tables', 'paginatedTable');
 
     // Make the ajax request to get the lint output
     self.lintReviewFile = function(target) {

@@ -80,9 +80,8 @@ var solum = (function () {
   };
 
   /**
-   * The models namespace is not implemented in this file, but accepts plug-in
-   * files that will use the services defined here to create re-useable models with
-   * knockout and jquery.
+   * The models namespace is for page models.  It should roughly be one model per
+   * page, unless those pages have the exact same elements and user interactions.
    */
   api.models = {};
 
@@ -92,6 +91,21 @@ var solum = (function () {
     }
 
     return new api.models[group][model]();
+  };
+
+  /**
+   * The components namespace is not implemented in this file, but accepts plug-in
+   * files that will use the services defined here to create re-useable models with
+   * knockout and jquery.
+   */
+  api.components = {};
+
+  api.getComponent = function (group, component) {
+    if (typeof api.components[group] !== 'object' || typeof api.components[group][component] !== 'function') {
+      throw "The requested component does not exist.";
+    }
+
+    return new api.components[group][component]();
   };
 
   /**

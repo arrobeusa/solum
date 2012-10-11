@@ -20,7 +20,7 @@ if (typeof require === 'function') {
 
 // The tables object is a module which abstracts the solum keyword
 // Access services library (if needed) through root variable - easier to rename refactor later
-solum.models.tables = (function (root) {
+solum.components.tables = (function (root) {
   "use strict";
 
   // Container for functions for the tables namespace

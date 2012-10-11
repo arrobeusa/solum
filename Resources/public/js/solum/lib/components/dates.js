@@ -16,7 +16,7 @@
 (function (root) {
   "use strict";
 
-  root.models.dates = (function () {
+  root.components.dates = (function () {
     // Access services library through root variable - easier to rename refactor later
 
     // Container for functions for the tables namespace

@@ -27,23 +27,29 @@ class TestController extends Controller
     public function getMochaSuitesAction(Request $request)
     {
         $projectRoot = $this->getProjectRoot();
-        $exclude = $request->get('exlude', array());
+        $exclude = $request->get('exclude', array());
 
-        // Find all the javascript files in the LS dir
-        $jsFileFinder = new Finder();
-        $jsFileFinder
-            ->files()
-            ->in($projectRoot . '/web/coverage/')
-            ->name('*.html');
+        if(!is_dir($projectRoot . '/web/coverage/')) {
+            $json = '[]';
+        } else {
 
-        $files = array();
-        foreach($jsFileFinder as $file) {
-            $relpath = str_replace($projectRoot, '', $file->getRealpath());
+            // Find all the javascript files in the LS dir
+            $jsFileFinder = new Finder();
+            $jsFileFinder
+                ->files()
+                ->in($projectRoot . '/web/coverage/')
+                ->name('*.html');
 
-            $files[] = $relpath;
+            $files = array();
+            foreach($jsFileFinder as $file) {
+                $relpath = str_replace($projectRoot, '', $file->getRealpath());
+
+                $files[] = $relpath;
+            }
+
+            $json = json_encode($files);
         }
 
-        $json = json_encode($files);
         $r = new Response($json);
         $r->headers->set('content-type', 'application/json');
         return $r;
@@ -161,7 +167,7 @@ class TestController extends Controller
         }
 
         $target = $projectRoot . $target;
-        $output = `jslint $target --indent=2 --terse --json --forin --maxerr=100`;
+        $output = `jslint $target --indent=2 --terse --json --maxerr=100`;
 
         $r = new Response($output);
         $r->headers->set('content-type', 'application/json');

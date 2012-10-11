@@ -97,7 +97,7 @@ if (typeof require === 'function') {
 
       for (i in route.params) {
         if (route.params.hasOwnProperty(i)) {
-          isDataUndefined   = (typeof params.routData === "undefined");
+          isDataUndefined   = (typeof params.routeData === "undefined");
           doesParamNotExist = (typeof params.routeData[route.params[i].name] === 'undefined');
           doesParamNotExist = (doesParamNotExist && typeof route.params[i].defaultValue === "undefined");
 
@@ -134,8 +134,11 @@ if (typeof require === 'function') {
 
       cnt = self.pendingRequests.length;
       if (cnt > 0 && !params.isSimultaneousRequest) {
+        cnt = 0;
         $.each(self.pendingRequests, function (idx, $ajaxInstance) {
-          $ajaxInstance.abort();
+          if (typeof $ajaxInstance === 'object' && $ajaxInstance !== null) {
+            $ajaxInstance.abort();
+          }
         });
       }
 

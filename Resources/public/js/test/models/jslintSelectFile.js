@@ -8,7 +8,7 @@
     self.ajaxManager = root.getService('ajax', 'manager');
 
     // Create a folder structure representation of the files
-    self.filetree     = root.getModel('tables', 'tree');
+    self.filetree     = root.getComponent('tables', 'tree');
 
     // Rendering function for leaf nodes in the folder structure
     // Setup the links to point to the review page

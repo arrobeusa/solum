@@ -61,13 +61,13 @@
 <script type="text/javascript">
   // Set the URL prefix to be this environment's alias, in prod there would be
   // no alias and this is already in the layout
-  solum.configureService('ajax', {prefix: '{{ app.request.getScheme() }}://{{ app.request.getHost() }}{{ app.request.getBasePath() }}/'});
+  solum.configureService('ajax', 'manager', {prefix: '{{ app.request.getScheme() }}://{{ app.request.getHost() }}{{ app.request.getBasePath() }}/'});
 
   // Define the model object for the page
   var pageModel = function() {
     var self         = this;
-    self.table       = solum.getModel('tables', 'paginatedTable');
-    self.ajaxManager = solum.getService('ajax');
+    self.table       = solum.getComponent('tables', 'paginatedTable');
+    self.ajaxManager = solum.getService('ajax', 'manager');
     self.isFirstRequestMade = ko.observable(false);
 
     // Process the data and break it into the page and response objects
