@@ -343,18 +343,144 @@ module.exports = function (lib) {
         test.should.be.false;
       });
     });
-    /*
     describe('page.previous()', function() {
-      it('Should set the page to the current page minus 1');
-      it('Should return false if the current page is 1');
+      it('Should decrement the page by 1 and call the onChange callback', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        page.onChange = onChange;
+        
+        // Reset the total count and page
+        page.setTotalCount(100);
+        page.setPage(3);
+        
+        // Validate that the first() method works
+        page.previous();
+        page.getPage().should.eql(2);
+        isCalled.should.be.true;
+      });
+      it('Should return false if the page is 1', function () {
+        var page = solum.getComponent('tables', 'page');
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        
+        // Set the page to 1 when it is already 1
+        var test = page.previous();
+        test.should.be.false;
+      });
     });
     describe('page.next()', function() {
-      it('Should increment the current page');
-      it('Should return false if the current page is the last page');
+      it('Should decrement the page by 1 and call the onChange callback', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        page.onChange = onChange;
+        
+        // Reset the total count and page
+        page.setTotalCount(100);
+        page.setPage(2);
+        
+        // Validate that the first() method works
+        page.next();
+        page.getPage().should.eql(3);
+        isCalled.should.be.true;
+      });
+      it('Should return false if the page is the last page', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        
+        // Reset the total count and page
+        page.setTotalCount(100);
+        page.setPage(4);
+        
+        // Validate that the first() method works
+        page.onChange = onChange;
+        var test = page.next();
+        test.should.be.false;
+        page.getPage().should.eql(4);
+        isCalled.should.be.false;
+      });
     });
     describe('page.last()', function() {
-      it('Should set the page to the last page');
-      it('Should return false if the current page is the last page');
+      it('Should decrement the page by 1 and call the onChange callback', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        page.onChange = onChange;
+        
+        // Reset the total count and page
+        page.setTotalCount(100);
+        page.setPage(2);
+        
+        // Validate that the first() method works
+        page.last();
+        page.getPage().should.eql(4);
+        isCalled.should.be.true;
+      });
+      it('Should return false if the page is the last page', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        
+        // Reset the total count and page
+        page.setTotalCount(100);
+        page.setPage(4);
+        
+        // Validate that the first() method works
+        page.onChange = onChange;
+        var test = page.last();
+        test.should.be.false;
+        isCalled.should.be.false;
+      });
     });
     describe('page.setPageToFirstAndTriggerOnChange()', function() {
       it('Should set the page to the first page');
