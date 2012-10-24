@@ -75,7 +75,7 @@ solum.components.tables = (function (root) {
       return items;
     };
 
-    // Remove method assumes that the object has an ID field
+    // Remove method based on the key/value pair
     tableApi.removeItems = function (key, value) {
       var list, temp, i;
       list = self.list();
@@ -155,13 +155,8 @@ solum.components.tables = (function (root) {
 
     // Take the groupBy property and attempt to group the simple list by that
     // property
-    groupedListApi.groupItems = function (prop) {
+    groupedListApi.groupItems = function () {
       var p, list, temp, i, t;
-
-      // Shortcut to set the groupBy property
-      if (typeof prop === "string") {
-        self.groupBy(prop);
-      }
 
       p = self.groupBy();
       empty();
@@ -238,14 +233,18 @@ solum.components.tables = (function (root) {
     self.page    = ko.observable(1);
     self.getPage = function () { return self.page(); };
     self.setPage = function (num) {
+      var retVal = false;
+
       // Error conditions
       if (typeof num !== "number") {
         throw "Page: setPage only accepts a number";
       }
       if (num >= 1 && num <= self.getTotalPages() && num !== self.page()) {
         self.page(num);
-        return self.onChange();
+        retVal = self.onChange();
       }
+      
+      return retVal;
     };
 
     // Convenience methods to set the page
@@ -267,7 +266,7 @@ solum.components.tables = (function (root) {
     };
 
     // Keep track of the totals
-    self.totalPages = ko.observable();
+    self.totalPages = ko.observable(0);
     self.getTotalPages = function () { return self.totalPages(); };
 
     self.totalCount = ko.observable(0);

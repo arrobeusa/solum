@@ -7,9 +7,7 @@ module.exports = function (lib) {
   "use strict";
   var
     solum,
-    solum_models_tables_page,
-    solum_models_tables_paginatedTable,
-    solum_models_tables_groupedList;
+    components_tables;
 
   describe('The library being used for this test suite:', function () {
     it('is: ' + lib, function () {});
@@ -18,15 +16,10 @@ module.exports = function (lib) {
   // Load should globally
   require('/usr/lib/node_modules/should/lib/should');
 
-  solum                              = require('./lib/solum-test.js');
-  solum(lib);
+  //solum = require('./lib/solum.js');
+  //solum(lib);
 
   // Models
-  solum_models_tables_page           = require('./lib/models/tables-page-test.js');
-  solum_models_tables_paginatedTable = require('./lib/models/tables-paginatedTable-test.js');
-  solum_models_tables_groupedList    = require('./lib/models/tables-groupedList-test.js');
-
-  solum_models_tables_page('../' + lib);
-  solum_models_tables_paginatedTable('../' + lib);
-  solum_models_tables_groupedList('../' + lib);
+  components_tables = require('./lib/components/tables.js');
+  components_tables('../' + lib);
 };

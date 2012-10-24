@@ -4,5 +4,3 @@
  */
 var suite = require('./suiteDefinition');
 suite('../../../lib');
-
-
