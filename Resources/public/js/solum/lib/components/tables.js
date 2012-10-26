@@ -286,13 +286,19 @@ solum.components.tables = (function (root) {
     self.pageSize    = ko.observable(self.defaultPageSize);
     self.getPageSize = function () { return self.pageSize(); };
     self.setPageSize = function (num) {
+      var retVal = false;
       if (typeof num !== "number") {
         throw "Page size must be a number";
       }
 
-      self.pageSize(num);
-      self.totalPages(Math.ceil(self.totalCount() / self.pageSize()));
-      self.setPageToFirstAndTriggerOnChange();
+      if (num != self.getPageSize()) {
+        self.pageSize(num);
+        self.totalPages(Math.ceil(self.totalCount() / self.pageSize()));
+        self.setPageToFirstAndTriggerOnChange();    
+        retVal = true;
+      }
+
+      return retVal;
     };
 
     self.loadMore = function () {
@@ -390,19 +396,6 @@ solum.components.tables = (function (root) {
       return self;
     };
   }; // END Page
-
-  api.selectList = function () {
-    if (!(this instanceof api.selectList)) {
-      return new api.selectList();
-    }
-    var self = this;
-
-    // This will hold the menu options
-    self.items = new api.paginatedTable();
-
-    // Holds the selected menu item
-    self.selectedItem = ko.observable();
-  };
 
   /**
    * Specifically meant to represent a file tree, but could be applied to most

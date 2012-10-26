@@ -47,10 +47,6 @@ module.exports = function (lib) {
     },
   ];
 
-  var testCallback = function (f, a) {
-    f(a);
-  };
-
   /**
    * Unit tests for paginated Table object
    */
@@ -286,10 +282,62 @@ module.exports = function (lib) {
       });
     });
     describe('page.setPage()', function() {
-      it('Should only accept a number');
-      it('Should change the page number if it is between 1 and the total number of pages');
-      it('Should return false if the page number is less than 1 or greater than the total');
-      it('Should execute the onChange method');
+      it('Should only accept a number', function () {
+        var page = solum.getComponent('tables', 'page');
+        var sp = page.setPage;
+        
+        var f = function () { page.setPage(1); }
+        f.should.not.throw();
+
+        f = function () { sp(); }
+        f.should.throw();
+        f = function () { sp('a'); }
+        f.should.throw();
+        f = function () { sp(true); }
+        f.should.throw();
+        f = function () { sp(false); }
+        f.should.throw();
+        f = function () { sp(null); }
+        f.should.throw();
+        f = function () { sp({}); }
+        f.should.throw();
+      });
+      it('Should change the page number if it is between 1 and the total number of pages', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        page.setPage(2);
+        page.getPage().should.eql(2);
+      });
+      it('Should return false if the page number is less than 1 or greater than the total or equal to the current page', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        var t = page.setPage(0);
+        t.should.be.false;
+        t = page.setPage(-1);
+        t.should.be.false;
+        t = page.setPage(5);
+        t.should.be.false;
+        t = page.setPage(1);
+        t.should.be.false;
+      });
+      it('Should execute the onChange method when the page changes', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+        page.setTotalCount(100);
+        page.onChange = onChange;
+        
+        page.setPage(0);
+        isCalled.should.be.false;
+        page.setPage(1);
+        isCalled.should.be.false;
+        page.setPage(5);
+        isCalled.should.be.false;
+        page.setPage(2);
+        isCalled.should.be.true;
+      });
     });
     describe('page.first()', function() {
       it('Should set the page to 1', function () {
@@ -466,11 +514,6 @@ module.exports = function (lib) {
         page.getTotalCount().should.eql(0)
         page.getPageSize().should.eql(25);
         
-        // Check the default values
-        page.getPage().should.eql(1);
-        page.getTotalCount().should.eql(0)
-        page.getPageSize().should.eql(25);
-        
         // Reset the total count and page
         page.setTotalCount(100);
         page.setPage(4);
@@ -483,75 +526,459 @@ module.exports = function (lib) {
       });
     });
     describe('page.setPageToFirstAndTriggerOnChange()', function() {
-      it('Should set the page to the first page');
-      it('Should always trigger the onChange callback');
+      it('Should set the page to the first page', function () {
+        var page = solum.getComponent('tables', 'page');
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        
+        // Reset the total count and page
+        page.setTotalCount(100);
+        page.setPage(3);
+        
+        // Validate that the first() method works
+        page.setPageToFirstAndTriggerOnChange();
+        page.getPage().should.eql(1);
+      });
+      it('Should always trigger the onChange callback', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+        
+        // Check the default values
+        page.getPage().should.eql(1);
+        page.getTotalCount().should.eql(0)
+        page.getPageSize().should.eql(25);
+        
+        // Reset the total count and page
+        page.setTotalCount(100);
+        page.setPage(4);
+        
+        // Validate that the first() method works
+        page.onChange = onChange;
+        page.setPageToFirstAndTriggerOnChange();
+        page.getPage().should.eql(1);
+        isCalled.should.be.true;
+        
+        // Test when page is 1
+        isCalled = false;
+        page.setPageToFirstAndTriggerOnChange();
+        isCalled.should.be.true;
+      });
     });
     describe('page.getTotalPages()', function() {
-      it('Should return the total number of pages');
+      it('Should return the total number of pages', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.getTotalPages().should.eql(0);
+        
+        page.setTotalCount(100);
+        page.getTotalPages(4);
+      });
     });
     describe('page.getTotalCount()', function() {
-      it('Should return the total row count');
+      it('Should return the total row count', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.getTotalCount().should.eql(0);
+        page.setTotalCount(100);
+        page.getTotalCount(100);
+      });
     });
     describe('page.setTotalCount()', function() {
-      it('Should only accept a number');
-      it('Should set the number of rows and reset the page count based on the page size');
+      it('Should only accept a number', function () {
+        var page = solum.getComponent('tables', 'page');
+        var sp = page.setTotalCount;
+        
+        var f = function () { sp(1); }
+        f.should.not.throw();
+
+        f = function () { sp(); }
+        f.should.throw();
+        f = function () { sp('a'); }
+        f.should.throw();
+        f = function () { sp(true); }
+        f.should.throw();
+        f = function () { sp(false); }
+        f.should.throw();
+        f = function () { sp(null); }
+        f.should.throw();
+        f = function () { sp({}); }
+        f.should.throw();
+      });
+      it('Should set the number of rows and reset the page count based on the page size', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.getTotalPages(0);
+        page.getPageSize().should.eql(25);
+        page.setTotalCount(100);
+        page.getTotalPages(4);
+      });
     });
     describe('page.defaultPageSize', function() {
-      it('Should be 25');
+      it('Should be 25', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.defaultPageSize.should.be.eql(25);
+      });
     });
     describe('page.getPageSize()', function() {
-      it('Should return the current page size');
+      it('Should return the current page size', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.getPageSize().should.be.eql(25);
+        page.setPageSize(10);
+        page.getPageSize().should.be.eql(10);
+      });
     });
     describe('page.setPageSize()', function() {
-      it('Should only accept a number')
-      it('Should set the current page size and reset the total number of pages');
-      it('Should set the page to the first page or execute the onChange function')
+      it('Should only accept a number', function () {
+        var page = solum.getComponent('tables', 'page');
+        var sp = page.setPageSize;
+        
+        var f = function () { sp(1); }
+        f.should.not.throw();
+
+        f = function () { sp(); }
+        f.should.throw();
+        f = function () { sp('a'); }
+        f.should.throw();
+        f = function () { sp(true); }
+        f.should.throw();
+        f = function () { sp(false); }
+        f.should.throw();
+        f = function () { sp(null); }
+        f.should.throw();
+        f = function () { sp({}); }
+        f.should.throw();
+      });
+      it('Should set the current page size and reset the total number of pages', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        page.getPageSize().should.eql(25);
+        page.getTotalPages().should.eql(4);
+        page.setPageSize(50);
+        page.getPageSize().should.eql(50);
+        page.getTotalPages().should.eql(2);
+      });
+      it('Should execute the onChange function', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+        page.setTotalCount(100);
+        page.onChange = onChange;
+        page.setPageSize(50);
+        isCalled.should.be.true;
+        isCalled = false;
+        page.setPageSize(50);
+        isCalled.should.be.false;
+      });
     });
     describe('page.loadMore()', function() {
-      it('Should increment the page size by the default page size');
-      it('Should return false if the current page size is already greater than or equal to the total count');
+      it('Should increment the page size by the default page size', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        page.getPageSize().should.eql(25);
+        page.defaultPageSize.should.eql(25);
+        page.loadMore();
+        page.getPageSize().should.eql(50);
+        page.defaultPageSize = 10;
+        page.loadMore();
+        page.getPageSize().should.eql(60);
+      });
+      it('Should return false if the current page size is already greater than or equal to the total count', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(50);
+        page.getPageSize().should.eql(25);
+        page.defaultPageSize.should.eql(25);
+        page.loadMore();
+        page.getPageSize().should.eql(50);
+        var t = page.loadMore();
+        t.should.be.false;
+      });
     });
-    describe('page.loadMore()', function() {
-      it('Should be a ko computed that returns a bool indicating if the page size is less than the total');
+    describe('page.hasMore()', function() {
+      it('Should be a ko computed that returns a bool indicating if the page size is less than the total', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        page.getPageSize().should.eql(25);
+        page.hasMore().should.be.true;
+        page.setPageSize(100);
+        page.hasMore().should.be.false;
+      });
     });
     describe('page.isFirstPage()', function() {
-      it('Should be a ko computed that indicates if the page is one');
+      it('Should be a ko computed that indicates if the page is one', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        page.getPage().should.eql(1);
+        page.isFirstPage().should.be.true;
+        page.setPage(2);
+        page.getPage().should.eql(2);
+        page.isFirstPage().should.be.false;
+        page.setPage(1);
+        page.getPage().should.eql(1);
+        page.isFirstPage().should.be.true;
+      });
     });
     describe('page.isNotFirstPage()', function() {
-      it('Should be a ko computed that indicates if the page is not one');
+      it('Should be a ko computed that indicates if the page is not one', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        page.getPage().should.eql(1);
+        page.isNotFirstPage().should.be.false;
+        page.setPage(2);
+        page.getPage().should.eql(2);
+        page.isNotFirstPage().should.be.true;
+        page.setPage(1);
+        page.getPage().should.eql(1);
+        page.isNotFirstPage().should.be.false;
+      });
     });
     describe('page.isLastPage()', function() {
-      it('Should be a ko computed that indicates if the page is the last page');
+      it('Should be a ko computed that indicates if the page is the last page', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        page.getPage().should.eql(1);
+        page.isLastPage().should.be.false;
+        page.setPage(4);
+        page.getPage().should.eql(4);
+        page.isLastPage().should.be.true;
+        page.setPage(1);
+        page.getPage().should.eql(1);
+        page.isLastPage().should.be.false;
+      });
     });
     describe('page.isNotLastPage()', function() {
-      it('Should be a ko computed that indicates if the page is not the last page');
+      it('Should be a ko computed that indicates if the page is not the last page', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        page.getPage().should.eql(1);
+        page.isFirstPage().should.be.true;
+        page.setPage(2);
+        page.getPage().should.eql(2);
+        page.isFirstPage().should.be.false;
+        page.setPage(1);
+        page.getPage().should.eql(1);
+        page.isFirstPage().should.be.true;
+      });
     });
     describe('page.getSortCol()', function() {
-      it('Should return the current sort column');
+      it('Should return the current sort column', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.getSortCol().should.eql(0);
+        page.setSortCol(1);
+        page.getSortCol().should.eql(1);
+      });
     });
     describe('page.setSortCol()', function() {
-      it('Should only accept a number');
-      it('Should set the current sort column');
-      it('Should set the page to the first page or execute the onChange function')
+      it('Should only accept a number', function () {
+        var page = solum.getComponent('tables', 'page');
+        var sp = page.setSortCol;
+        
+        var f = function () { sp(1); }
+        f.should.not.throw();
+
+        f = function () { sp(); }
+        f.should.throw();
+        f = function () { sp('a'); }
+        f.should.throw();
+        f = function () { sp(true); }
+        f.should.throw();
+        f = function () { sp(false); }
+        f.should.throw();
+        f = function () { sp(null); }
+        f.should.throw();
+        f = function () { sp({}); }
+        f.should.throw();
+      });
+      it('Should set the current sort column', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.getSortCol().should.eql(0);
+        page.setSortCol(1);
+        page.getSortCol().should.eql(1);
+      });
+      it('Should execute the onChange function', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+
+        // Validate that the first() method works
+        page.onChange = onChange;
+        page.getSortCol().should.eql(0);
+        page.setSortCol(1);
+        isCalled.should.be.true;
+      })
     });
     describe('page.getSortDir()', function() {
-      it('Should return the current sort direction');
+      it('Should return the current sort direction', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.getSortDir().should.eql('A');
+        page.setSortDir('D');
+        page.getSortDir().should.eql('D');
+      });
     });
     describe('page.setSortDir()', function() {
-      it('Should only accept "A" or "D"');
-      it('Should set the current sort direction');
-      it('Should set the page to the first page or execute the onChange function')
+      it('Should only accept "A" or "D"', function () {
+        var page = solum.getComponent('tables', 'page');
+        var sp = page.setSortDir;
+        
+        var f = function () { sp('A'); }
+        f.should.not.throw();
+        f = function () { sp('D'); }
+        f.should.not.throw();
+
+        f = function () { sp(); }
+        f.should.throw();
+        f = function () { sp(1); }
+        f.should.throw();
+        f = function () { sp(true); }
+        f.should.throw();
+        f = function () { sp(false); }
+        f.should.throw();
+        f = function () { sp(null); }
+        f.should.throw();
+        f = function () { sp({}); }
+        f.should.throw();
+      });
+      it('Should set the current sort direction', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.getSortDir().should.eql('A');
+        page.setSortDir('D');
+        page.getSortDir().should.eql('D');
+      });
+      it('Should execute the onChange function', function () {
+        var page = solum.getComponent('tables', 'page');
+        var isCalled = false;
+        var onChange = function () {
+          isCalled = true;  
+        };
+
+        // Validate that the first() method works
+        page.onChange = onChange;
+        page.setSortDir('D');
+        isCalled.should.be.true;
+      })
     });
     describe('page.toggleSort()', function() {
-      it('Should toggle the current sort direction if the column specified is already the sort column');
-      it('Should set the sort column and set the direction to "A" if not the current sort column')
+      it('Should toggle the current sort direction if the column specified is already the sort column', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.toggleSort(0);
+        page.getSortCol().should.eql(0);
+        page.getSortDir().should.eql('D')
+        page.toggleSort(0);
+        page.getSortCol().should.eql(0);
+        page.getSortDir().should.eql('A')
+      });
+      it('Should set the sort column and set the direction to "A" if not the current sort column', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.toggleSort(1);
+        page.getSortCol().should.eql(1);
+        page.getSortDir().should.eql('A')
+        page.toggleSort(2);
+        page.getSortCol().should.eql(2);
+        page.getSortDir().should.eql('A')
+      })
     });
     describe('page.toObj()', function() {
-      it('Should serialize itself to an object with a start/end/total rows and the sort col/direction');
+      it('Should serialize itself to an object with a start/end/total rows and the sort col/direction', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.setTotalCount(100);
+        var res = {
+          start_row:      1,
+          end_row:        25,
+          sort_col:       0,
+          sort_direction: 'A'
+        };
+        page.toObj().should.eql(res);
+      });
     });
     describe('page.fromObj()', function() {
-      it('Should only accept an object');
-      it('Should deserialize itself and set the total count and page');
-    });/**/
+      it('Should only accept an object with an "EndRow" and "TotalRows" parameters and should set the total count and page', function () {
+        var page = solum.getComponent('tables', 'page');
+        page.getTotalCount().should.eql(0);
+        page.getPage().should.eql(1);
+        var obj = {EndRow: 50, TotalRows: 100};
+        
+        var sp = page.fromObj;
+        
+        var f = function () { sp(obj); }
+        f.should.not.throw();
+
+        f = function () { sp(); }
+        f.should.throw();
+        f = function () { sp(1); }
+        f.should.throw();
+        f = function () { sp(true); }
+        f.should.throw();
+        f = function () { sp(false); }
+        f.should.throw();
+        f = function () { sp(null); }
+        f.should.throw();
+        f = function () { sp('a'); }
+        f.should.throw();
+        
+        page.fromObj(obj)
+        page.getTotalCount().should.eql(100);
+        page.getPage().should.eql(2);
+      });
+    });
+  });
+  
+  var rawTree = [
+    '/home/beum/testfile.js',
+    '/home/optimus/othertest.js'
+  ];
+  
+  var processedTree = {
+    home: {
+      beum: {"testfile.js": '/home/beum/testfile.js'},
+      optimus: {"othertest.js": '/home/optimus/othertest.js'}
+    }
+  };
+
+  /**
+   * Unit tests for tree object
+   */
+  describe('solum:tables:tree',function() {
+    describe('Preventing execution as a function and not as a constructor.', function () {
+      it('Should return an instance of the paginated table even when called without "new"', function () {
+        var tree = solum.components.tables.tree();
+        tree.should.be.a("object");
+        tree.should.be.an.instanceof(solum.components.tables.tree);
+      });
+    });
+    describe('The reset() method', function () {
+      it('Should set the hierarchy property to an empty object', function () {
+        var tree = solum.getComponent('tables', 'tree');
+        tree.addItems(rawTree);
+        tree.hierarchy().should.eql(processedTree);
+        tree.reset();
+        tree.hierarchy().should.eql({});
+      });
+    });
+    describe('The addItems() method', function () {
+      it('Should add items to the internal list and rebuild the hierarchy', function () {
+        var tree = solum.getComponent('tables', 'tree');
+        tree.addItems(rawTree);
+        tree.raw.list().length.should.eql(2);
+        tree.hierarchy().should.eql(processedTree);
+      }); 
+    });
+    describe('The createHierarchyFromRawList() method', function () {
+      it('Should take a list of filepath strings and create a hierarchy', function () {
+        var tree = solum.getComponent('tables', 'tree');
+        tree.addItems(rawTree);
+        tree.raw.list().length.should.eql(2);
+        tree.hierarchy().should.eql(processedTree);
+        tree.reset();
+        tree.hierarchy().should.eql({});
+        tree.createHierarchyFromRawList();
+        tree.hierarchy().should.eql(processedTree);
+      });
+    });
   });
 }
